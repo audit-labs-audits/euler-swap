@@ -1,0 +1,241 @@
+{
+  "title": "1.1: EulerSwap ‑ Bird’s-Eye View",
+  "id": "dJktWHq38vkCM0q9WjHwZO5uq8/LHhOCMZd6D3IF5Bc=",
+  "originalId": 3155,
+  "position": 1,
+  "steps": [
+    {
+      "type": "highlight",
+      "description": "What is `EulerSwap`? It’s a **AMM** that integrates with `Euler` credit vaults to borrow output tokens against collateral, offering up to **40× deeper liquidity** by sharing liquidity across pools and using customizable curves.",
+      "file": "README.md",
+      "highlight": [
+        {
+          "start": 1,
+          "end": 4
+        }
+      ],
+      "title": "",
+      "id": "37785"
+    },
+    {
+      "type": "highlight",
+      "description": "Core contracts & libraries:\n- `EulerSwap`: EVC operator + swap logic\n- `UniswapHook`: Uniswap v4 hook integration\n- `EulerSwapFactory`: pool deployment & registry\n- `EulerSwapPeriphery`: router & UX helpers\n- **Libraries**: `CtxLib`, `FundsLib`, `CurveLib`, `QuoteLib`\n- **Utils**: `MetaProxyDeployer`, `ProtocolFee`",
+      "file": "docs/architecture.md",
+      "highlight": [
+        {
+          "start": 17,
+          "end": 21
+        }
+      ],
+      "title": "",
+      "id": "37786"
+    },
+    {
+      "type": "textOnly",
+      "description": "Repository layout: top-level folders include `src/` (Solidity contracts), `docs/` (architecture and whitepaper), `test/` (Foundry tests), `script/` (deployment scripts), and `.github/` (CI workflows).",
+      "title": "",
+      "id": "37787"
+    },
+    {
+      "type": "highlight",
+      "description": "`EulerSwap.sol` declares contract `EulerSwap` inheriting `IEulerSwap` interface, `EVCUtil` for EulerVaultConnector utilities, and `UniswapHook` for Uniswap4 hook compatibility – this is the core swap operator implementation.",
+      "file": "src/EulerSwap.sol",
+      "highlight": [
+        {
+          "start": 1,
+          "end": 7
+        }
+      ],
+      "title": "",
+      "id": "37788"
+    },
+    {
+      "type": "highlight",
+      "description": "`UniswapHook.sol` extends `BaseHook` to implement Uniswap v4 hook functions. It validates hook permissions and sets up the `PoolKey`, preparing the pool for `beforeSwap` callbacks (deep dive in later Hook tour).",
+      "file": "src/UniswapHook.sol",
+      "highlight": [
+        {
+          "start": 1,
+          "end": 5
+        }
+      ],
+      "title": "",
+      "id": "37789"
+    },
+    {
+      "type": "highlight",
+      "description": "`IEulerSwap.Params` struct holds immutable pool configuration—vault addresses, equilibrium reserves, price ratios, concentration factors, fees, and protocolFee settings—**ABI**-encoded into proxy metadata. `InitialState` seeds on-chain reserve values at deployment.",
+      "file": "src/interfaces/IEulerSwap.sol",
+      "highlight": [
+        {
+          "start": 6,
+          "end": 22
+        }
+      ],
+      "title": "",
+      "id": "37790"
+    },
+    {
+      "type": "highlight",
+      "description": "`EulerSwapFactory.sol` manages pool deployment via `create2` proxies, tracks `installedPools` by Euler account, `allPools` set, and `poolMap` by asset pair. It enforces authorization, vault implementation checks, and protocolFee consistency.",
+      "file": "src/EulerSwapFactory.sol",
+      "highlight": [
+        {
+          "start": 14,
+          "end": 36
+        }
+      ],
+      "title": "",
+      "id": "37791"
+    },
+    {
+      "type": "highlight",
+      "description": "`MetaProxyDeployer.sol` builds minimal **CREATE2** proxies using custom **EIP-3448** bytecode (`HEAD`/`Tail` constants) that embed the encoded `Params` metadata, enabling cheap delegatecalls to read configuration.",
+      "file": "src/utils/MetaProxyDeployer.sol",
+      "highlight": [
+        {
+          "start": 15,
+          "end": 40
+        }
+      ],
+      "title": "",
+      "id": "37792"
+    },
+    {
+      "type": "highlight",
+      "description": "The factory encodes `Params` as proxy metadata (no length prefix), and the proxy’s trailing `calldata` supplies those `Params` to `EulerSwap` via `delegatecall`, avoiding storage reads for immutable state.",
+      "file": "docs/architecture.md",
+      "highlight": [
+        {
+          "start": 44,
+          "end": 49
+        }
+      ],
+      "title": "",
+      "id": "37793"
+    },
+    {
+      "type": "highlight",
+      "description": "`CtxLib.sol` reserves a fixed storage slot for pool state (reserve0, reserve1, status) accessible via `getStorage()`, and `getParams()` unpacks the **ABI-encoded** `Params` from the proxy’s trailing calldata for every call.",
+      "file": "src/libraries/CtxLib.sol",
+      "highlight": [
+        {
+          "start": 7,
+          "end": 31
+        }
+      ],
+      "title": "",
+      "id": "37794"
+    },
+    {
+      "type": "highlight",
+      "description": "`CurveLib.verify()` checks that newReserve0 and newReserve1 lie on or above the custom AMM curve. The library defines `f()` and `fInverse()` to compute virtual reserve transformations based on price and concentration parameters (explored in Pool Logic tour).",
+      "file": "src/libraries/CurveLib.sol",
+      "highlight": [
+        {
+          "start": 12,
+          "end": 17
+        }
+      ],
+      "title": "",
+      "id": "37795"
+    },
+    {
+      "type": "highlight",
+      "description": "`QuoteLib.computeQuote` applies the pool fee, ensures the `EulerSwap` operator is installed, checks token order, invokes `findCurvePoint` for the raw quote, enforces in/out limits, and inflates input for exact-output swaps.",
+      "file": "src/libraries/QuoteLib.sol",
+      "highlight": [
+        {
+          "start": 27,
+          "end": 31
+        }
+      ],
+      "title": "",
+      "id": "37796"
+    },
+    {
+      "type": "highlight",
+      "description": "`EulerSwapPeriphery.sol` is a stateless UX wrapper offering `swapExactIn` and `swapExactOut` helpers. It handles SafeERC20 transfers, deadline/slippage validation, and calls the pool’s `swap()` with correct zero-amount flags.",
+      "file": "src/EulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 1,
+          "end": 12
+        }
+      ],
+      "title": "",
+      "id": "37797"
+    },
+    {
+      "type": "highlight",
+      "description": "**Operational flow:** **LP** installs operator with desired `Params` and `InitialState`, mines a salt for deterministic address, authorises & enables `vaults` as collateral, and calls `factory.deployPool()→activate()`.",
+      "file": "docs/architecture.md",
+      "highlight": [
+        {
+          "start": 34,
+          "end": 43
+        }
+      ],
+      "title": "",
+      "id": "37798"
+    },
+    {
+      "type": "highlight",
+      "description": "`getLimits()` in `QuoteLib` combines virtual reserve caps, vault supply/borrow limits, and actual vault cash to upper-bound allowable swap sizes; it’s a safety helper for routers and UIs.",
+      "file": "docs/architecture.md",
+      "highlight": [
+        {
+          "start": 98,
+          "end": 106
+        }
+      ],
+      "title": "",
+      "id": "37799"
+    },
+    {
+      "type": "highlight",
+      "description": "`EulerSwap.sol` uses a single `nonReentrant()` mutex (status toggled in `CtxLib.Storage`) shared with `UniswapHook`’s `nonReentrantHook` to enforce reentrancy safety across both swap paths.",
+      "file": "src/EulerSwap.sol",
+      "highlight": [
+        {
+          "start": 44,
+          "end": 51
+        }
+      ],
+      "title": "",
+      "id": "37800"
+    },
+    {
+      "type": "highlight",
+      "description": "`Basic.t.sol` illustrates **Foundry** test coverage: pool setup in `setUp()`, `ERC20` approvals, and simple `swapExactIn` tests. The full suite in `/test` covers Limits, Fees, HookSwaps, and invariants.",
+      "file": "test/Basic.t.sol",
+      "highlight": [
+        {
+          "start": 10,
+          "end": 17
+        }
+      ],
+      "title": "",
+      "id": "37801"
+    },
+    {
+      "type": "highlight",
+      "description": "CI pipeline runs `forge fmt --check`, `forge build`, and `forge test` on push/PR. This enforces code formatting, compilation, and exhaustive test coverage before merging any changes.",
+      "file": ".github/workflows/test.yml",
+      "highlight": [
+        {
+          "start": 32,
+          "end": 45
+        }
+      ],
+      "title": "",
+      "id": "37802"
+    },
+    {
+      "type": "textOnly",
+      "description": "You now have a mental map of EulerSwap’s key components: core contracts (`EulerSwap`, `UniswapHook`, `Factory`, `Periphery`), libraries (`CtxLib`, `CurveLib`, `QuoteLib`, `FundsLib`), meta-proxy pattern, invariants, shared storage, and governance hooks. In upcoming tours, we’ll deep-dive into Pool Logic (2.x), Hook Integration (2.4), Periphery UX (3.x), and Deployment & Governance (4.x). Next up: Pool Logic details.",
+      "title": "",
+      "id": "37803"
+    }
+  ]
+}

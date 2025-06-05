@@ -1,0 +1,27 @@
+{
+  "packageName": "euler-swap",
+  "packageVersion": 1,
+  "hash": "df0656e034639e92f63f397a101cfa2831f85ef1",
+  "numberOfTours": 2,
+  "titleOfTours": [
+    "1.1: EulerSwap ‑ Bird’s-Eye View",
+    "2.1: Want to learn more?"
+  ],
+  "totalNumberOfSteps": 20,
+  "filesCovered": [
+    "README.md",
+    "docs/architecture.md",
+    "src/EulerSwap.sol",
+    "src/UniswapHook.sol",
+    "src/interfaces/IEulerSwap.sol",
+    "src/EulerSwapFactory.sol",
+    "src/utils/MetaProxyDeployer.sol",
+    "src/libraries/CtxLib.sol",
+    "src/libraries/CurveLib.sol",
+    "src/libraries/QuoteLib.sol",
+    "src/EulerSwapPeriphery.sol",
+    "test/Basic.t.sol",
+    ".github/workflows/test.yml"
+  ],
+  "numberOfFilesCovered": 13
+}
