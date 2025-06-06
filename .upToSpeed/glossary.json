@@ -85,12 +85,6 @@
   },
   {
     "terms": [
-      "Swap"
-    ],
-    "definition": "# Swap\n\nA swap in EulerSwap is an operation where one token is exchanged for another within a liquidity pool that integrates with Euler credit vaults. Unlike traditional AMMs, EulerSwap's swap function leverages lending/borrowing mechanisms to provide deeper liquidity (up to 40x traditional AMMs).\n\nThe core `swap(uint256 amount0Out, uint256 amount1Out, address to, bytes calldata data)` function:\n\n1. Optimistically sends requested tokens to the recipient\n2. Executes an optional callback if data is provided\n3. Deposits incoming tokens from the transaction\n4. Verifies the pool's mathematical curve invariant is maintained\n5. Updates internal reserves and emits a `Swap` event with all details\n\nEulerSwap supports both exact-input swaps (where input amount is fixed) and exact-output swaps (where output amount is fixed). The contract implements reentrancy protection and balance checks to ensure security, while maintaining capital efficiency through its unique integration with Euler's lending protocol.\n\nThe system allows liquidity to be shared across multiple pools simultaneously, significantly improving capital efficiency compared to traditional AMMs where liquidity is fragmented across separate pools."
-  },
-  {
-    "terms": [
       "Futures"
     ],
     "definition": "# Futures\n\nIn the context of EulerSwap, \"Futures\" are not a native protocol feature. The platform focuses on spot trading with enhanced capital efficiency through integration with Euler credit vaults. Unlike traditional futures contracts that enable trading of assets at predetermined future prices, EulerSwap's architecture centers on an automated market maker (AMM) that provides deep liquidity for immediate swaps by leveraging lending pools. \n\nWhile the protocol implements flexible pool configurations and customizable AMM curves that optimize swap pricing, it does not offer derivatives or futures trading functionality in its current implementation. The system instead achieves capital efficiency through just-in-time liquidity provision and cross-collateralized credit vaults that support multiple asset pairs simultaneously, reducing the inefficiencies typical of traditional AMMs.\n\nEulerSwap's architecture does include time-sensitive components like swap deadlines (as seen in `test_SwapDeadline()`) and utilization limits, but these are standard DEX features rather than futures trading mechanisms."
