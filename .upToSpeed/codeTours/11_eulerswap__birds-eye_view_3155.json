@@ -32,7 +32,7 @@
     },
     {
       "type": "textOnly",
-      "description": "Repository layout: top-level folders include `src/` (Solidity contracts), `docs/` (architecture and whitepaper), `test/` (Foundry tests), `script/` (deployment scripts), and `.github/` (CI workflows).",
+      "description": "Repository layout:\n  - `src/` – Solidity contracts\n  - `docs/` – architecture and whitepaper\n  - `test/` – Foundry tests\n  - `script/` – deployment scripts\n  - `.github/` – CI workflows\n",
       "title": "",
       "id": "37787"
     },
@@ -168,7 +168,7 @@
     },
     {
       "type": "highlight",
-      "description": "**Operational flow:** **LP** installs operator with desired `Params` and `InitialState`, mines a salt for deterministic address, authorises & enables `vaults` as collateral, and calls `factory.deployPool()→activate()`.",
+      "description": "**Operational flow**: LP installs operator with desired `Params` and `InitialState`, mines a salt for deterministic address, authorises & enables `vaults` as collateral, and calls `factory.deployPool()→activate()`.",
       "file": "docs/architecture.md",
       "highlight": [
         {
