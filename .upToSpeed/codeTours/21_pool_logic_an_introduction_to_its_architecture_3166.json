@@ -1,0 +1,85 @@
+{
+  "title": "2.1: Pool Logic: An Introduction to its Architecture",
+  "id": "Ty5V6hzvElss/zGVIxEBZeHP4A/UzwY753uFvXzAYyI=",
+  "originalId": 3166,
+  "position": 2,
+  "steps": [
+    {
+      "type": "textOnly",
+      "description": "**Pool Logic component** comprises four files:\n\n- `src/EulerSwap.sol`\n- `src/UniswapHook.sol`\n- `src/interfaces/IEulerSwap.sol`\n- `src/interfaces/IEulerSwapCallee.sol`\n\nEach plays a distinct role in orchestrating swaps via Euler and Uniswap.",
+      "title": "",
+      "id": "37826"
+    },
+    {
+      "type": "highlight",
+      "description": "`IEulerSwap.sol` defines the core pool interface. Lines 6–22 declare **Params** for immutable configuration; lines 25–28 define **InitialState** for starting reserves.",
+      "file": "src/interfaces/IEulerSwap.sol",
+      "highlight": [
+        {
+          "start": 6,
+          "end": 28
+        }
+      ],
+      "title": "",
+      "id": "37827"
+    },
+    {
+      "type": "highlight",
+      "description": "`IEulerSwapCallee.sol` specifies the flash-swap callback. The `eulerSwapCall` function (lines 5–9) lets contracts implement custom logic when a swap provides non-empty data.",
+      "file": "src/interfaces/IEulerSwapCallee.sol",
+      "highlight": [
+        {
+          "start": 4,
+          "end": 10
+        }
+      ],
+      "title": "",
+      "id": "37828"
+    },
+    {
+      "type": "highlight",
+      "description": "`EulerSwap.sol` declares the main pool contract at line 17. It implements `IEulerSwap` and inherits from `EVCUtil` (Euler integration) and `UniswapHook` (Uniswap-v4 hook support).",
+      "file": "src/EulerSwap.sol",
+      "highlight": [
+        {
+          "start": 17,
+          "end": 17
+        }
+      ],
+      "title": "",
+      "id": "37829"
+    },
+    {
+      "type": "highlight",
+      "description": "`UniswapHook.sol` `extends` **BaseHook** at line 23, plugging this contract into Uniswap v4’s hook framework.",
+      "file": "src/UniswapHook.sol",
+      "highlight": [
+        {
+          "start": 23,
+          "end": 23
+        }
+      ],
+      "title": "",
+      "id": "37830"
+    },
+    {
+      "type": "highlight",
+      "description": "The `_beforeSwap` override (lines 82–87) is the core `Uniswap-v4` integration point where swaps are intercepted and routed through EulerSwap’s curve logic.",
+      "file": "src/UniswapHook.sol",
+      "highlight": [
+        {
+          "start": 82,
+          "end": 87
+        }
+      ],
+      "title": "",
+      "id": "37831"
+    },
+    {
+      "type": "textOnly",
+      "description": "Everything in Pool Logic flows from `Params` / `InitialState` → `EulerSwap.activate()` → `EulerSwap.swap()` or `UniswapHook._beforeSwap()`.\n\nUpcoming tours will unpack each stage in detail.",
+      "title": "",
+      "id": "37832"
+    }
+  ]
+}

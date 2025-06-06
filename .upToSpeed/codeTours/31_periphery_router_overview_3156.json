@@ -1,0 +1,124 @@
+{
+  "title": "3.1: Periphery Router: Overview",
+  "id": "xBBGiCrwkMrjyAH1BPYc+96J/y3+TuBgyD6QOgBEj6w=",
+  "originalId": 3156,
+  "position": 3,
+  "steps": [
+    {
+      "type": "textOnly",
+      "description": "Under src/ there are exactly two files dedicated to the **Periphery Router**: `IEulerSwapPeriphery.sol` (interface) and `EulerSwapPeriphery.sol` (implementation). This component wraps a trusted EulerSwap pool and enforces UX-friendly slippage and deadline guards.",
+      "title": "",
+      "id": "37750"
+    },
+    {
+      "type": "highlight",
+      "description": "**NatSpec comments** highlight slippage protection (`amountOutMin`), deadline enforcement, and the trust requirement before its external function signature in the function `swapExactIn` (lines 5–16).",
+      "file": "src/interfaces/IEulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 5,
+          "end": 16
+        }
+      ],
+      "title": "",
+      "id": "37751"
+    },
+    {
+      "type": "highlight",
+      "description": "`swapExactOut` (lines 18–29) mirrors `swapExactIn` for exact-out swaps: specify `amountOut`, enforce an `amountInMax` cap, and guard with the same `deadline` logic.",
+      "file": "src/interfaces/IEulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 18,
+          "end": 29
+        }
+      ],
+      "title": "",
+      "id": "37752"
+    },
+    {
+      "type": "highlight",
+      "description": "View helpers (lines 31–45) let you estimate outcomes off-chain: `quoteExactInput`, `quoteExactOutput`, and `getLimits` return expected amounts and bounds without executing a swap.",
+      "file": "src/interfaces/IEulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 31,
+          "end": 45
+        }
+      ],
+      "title": "",
+      "id": "37753"
+    },
+    {
+      "type": "highlight",
+      "description": "The implementation declares three custom errors (lines 12\u001214) to revert under specific conditions: when the output amount is below the minimum (`AmountOutLessThanMin`), the input amount exceeds the maximum (`AmountInMoreThanMax`), or the deadline has passed (`DeadlineExpired`).",
+      "file": "src/EulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 12,
+          "end": 14
+        }
+      ],
+      "title": "",
+      "id": "37754"
+    },
+    {
+      "type": "highlight",
+      "description": "`swapExactIn` (lines 16–33) enforces the `deadline` (line 26), queries `amountOut` via `IEulerSwap.computeQuote` (28), checks `slippage` (30), then delegates to the internal `swap()` helper (32).",
+      "file": "src/EulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 16,
+          "end": 33
+        }
+      ],
+      "title": "",
+      "id": "37755"
+    },
+    {
+      "type": "highlight",
+      "description": "`swapExactOut` (lines 35–52) follows the same pattern but for **exact-out**: `computeQuote` for input amount (47), enforce `amountInMax` (49), then call `swap()` (51).",
+      "file": "src/EulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 35,
+          "end": 52
+        }
+      ],
+      "title": "",
+      "id": "37756"
+    },
+    {
+      "type": "highlight",
+      "description": "The read-only functions (lines 54–75) are thin wrappers forwarding to `IEulerSwap`: `computeQuote` for quotes and `getLimits` for bounds, matching the interface contracts.",
+      "file": "src/EulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 54,
+          "end": 75
+        }
+      ],
+      "title": "",
+      "id": "37757"
+    },
+    {
+      "type": "highlight",
+      "description": "`swap()` (lines 77–96) is the internal helper: it transfers `tokenIn` via `safeTransferFrom` (92), determines asset ordering (94), and invokes `eulerSwap.swap` with the correct parameters.",
+      "file": "src/EulerSwapPeriphery.sol",
+      "highlight": [
+        {
+          "start": 77,
+          "end": 96
+        }
+      ],
+      "title": "",
+      "id": "37758"
+    },
+    {
+      "type": "textOnly",
+      "description": "In summary, `EulerSwapPeriphery` is a stateless router that wraps a trusted `EulerSwap` pool: it checks deadlines and slippage, then forwards calls, providing gas- and UX-optimized swap functions.",
+      "title": "",
+      "id": "37759"
+    }
+  ]
+}
